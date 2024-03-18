@@ -1,16 +1,16 @@
 package com.bank_v2.bankingportal_api.service.serviceImpl;
 
 import com.bank_v2.bankingportal_api.entity.Account;
+import com.bank_v2.bankingportal_api.entity.Transaction;
 import com.bank_v2.bankingportal_api.entity.TransactionType;
 import com.bank_v2.bankingportal_api.entity.User;
 import com.bank_v2.bankingportal_api.exception.InsufficientBalanceException;
 import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.exception.UnauthorizedException;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
+import com.bank_v2.bankingportal_api.repository.TransactionRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
-import jakarta.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,9 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
     @Autowired
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -91,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void fundTransfer(String sourceAccountNumber, String targetAccountNumber, String pin, double amount) throws ClassNotFoundException {
+    public void fundTransfer(String sourceAccountNumber, String targetAccountNumber, String pin, double amount) {
         Account sourceAccount = accountRepository.findByAccountNumber(sourceAccountNumber);
         if (sourceAccount == null) {
             throw new NotFoundException("Source account not found");
@@ -110,17 +113,16 @@ public class AccountServiceImpl implements AccountService {
         if (sourceBalance < amount) {
             throw new InsufficientBalanceException("Insufficient balance");
         }
-        double newSourceBalance = sourceBalance - amount;
+        double newSourceBalance = sourceAccount.getBalance() - amount;
         sourceAccount.setBalance(newSourceBalance);
         accountRepository.save(sourceAccount);
 
-        double targetBalance = targetAccount.getBalance();
-        double newTargetBalance = targetBalance + amount;
+        double newTargetBalance = targetAccount.getBalance() + amount;
         targetAccount.setBalance(newTargetBalance);
         accountRepository.save(targetAccount);
 
         Transaction transaction = new Transaction();
-        transaction.set(amount);
+        transaction.setAmount(amount);
         transaction.setTransactionType(TransactionType.CASH_TRANSFER);
         transaction.setTransaction_date(new Date());
         transaction.setSourceAccount(sourceAccount);
