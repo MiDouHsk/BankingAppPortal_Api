@@ -20,11 +20,5 @@ public class RoleMapper {
         return role;
     }
 
-    public Role mapToEntity(RoleType roleType) {
-        Role role = new Role();
-        role.setRoleType(roleType);
-        return role;
-    }
-
 
 }

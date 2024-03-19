@@ -1,5 +1,6 @@
 package com.bank_v2.bankingportal_api.service.serviceImpl;
 
+import com.bank_v2.bankingportal_api.dto.RoleDto;
 import com.bank_v2.bankingportal_api.dto.UserDto;
 import com.bank_v2.bankingportal_api.entity.*;
 import com.bank_v2.bankingportal_api.exception.UserValidation;
@@ -22,15 +23,24 @@ public class UserServiceImpl implements UserService {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final AccountRepository accountRepository;
+    private Role role;
+    private RoleType roleType;
 
     @Override
     public User registerUser(UserDto dto) {
-        User user = modelMapper.map(dto, User.class);
-        user.getAccount().setAccountNumber(generateUniqueAccountNumber());
-        user.getAccount().setUser(user);
-        Role role = user.getRole();
-        role.setRoleType(RoleType.ROLE_USER);
-        return userRepository.save(user);
+        try{
+            User user = modelMapper.map(dto, User.class);
+            user.getAccount().setAccountNumber(generateUniqueAccountNumber());
+            user.getAccount().setUser(user);
+            Role role = user.getRole();
+            role.setRoleType(RoleType.ROLE_USER);
+            return userRepository.save(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            throw new RuntimeException("Lỗi khi đăng ký người dùng: " + e.getMessage());
+        }
+
     }
 
     private String generateUniqueAccountNumber() {

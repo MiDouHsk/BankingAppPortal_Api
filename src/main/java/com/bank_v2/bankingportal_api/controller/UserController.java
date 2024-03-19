@@ -36,25 +36,25 @@ public class UserController {
     private RoleMapper roleMapper;
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDto user,@RequestParam RoleType roleType) {
-        if (user.getPassword() == null || user.getPassword().isEmpty() ||
-                user.getEmail() == null || user.getEmail().isEmpty() ||
-                user.getPhone_number() == null || user.getPhone_number().isEmpty() ||
-                user.getName() == null || user.getName().isEmpty()) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
+        try {
+            if (userDto.getPassword() == null || userDto.getPassword().isEmpty() ||
+                    userDto.getEmail() == null || userDto.getEmail().isEmpty() ||
+                    userDto.getPhone_number() == null || userDto.getPhone_number().isEmpty() ||
+                    userDto.getName() == null || userDto.getName().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            User userAccount = userService.registerUser(userDto);
+            return ResponseEntity.ok(userAccount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-        Role role = roleMapper.mapToEntity(roleType);
-//        user.setRole(role);
-
-        User userAccount = userService.registerUser(user);
-
-        return ResponseEntity.ok(userAccount);
     }
 
     @PutMapping("/{id}/update")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
         User userAccount = userService.updateUser(id, user);
-
         return ResponseEntity.ok(userAccount);
     }
 

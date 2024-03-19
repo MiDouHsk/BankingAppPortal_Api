@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 public interface UserService {
 
     public User registerUser(UserDto user);
-
     User getUserByAccountNumber(Long id, String account_no);
     public void savedUser(User user);
     User updateUser(Long id, UserDto user);

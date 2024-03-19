@@ -17,8 +17,4 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
-    }
-
 }
