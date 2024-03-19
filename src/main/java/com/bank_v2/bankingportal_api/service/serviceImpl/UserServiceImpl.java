@@ -1,8 +1,7 @@
 package com.bank_v2.bankingportal_api.service.serviceImpl;
 
 import com.bank_v2.bankingportal_api.dto.UserDto;
-import com.bank_v2.bankingportal_api.entity.Account;
-import com.bank_v2.bankingportal_api.entity.User;
+import com.bank_v2.bankingportal_api.entity.*;
 import com.bank_v2.bankingportal_api.exception.UserValidation;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
 import com.bank_v2.bankingportal_api.repository.UserRepository;
@@ -29,6 +28,8 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(dto, User.class);
         user.getAccount().setAccountNumber(generateUniqueAccountNumber());
         user.getAccount().setUser(user);
+        Role role = user.getRole();
+        role.setRoleType(RoleType.ROLE_USER);
         return userRepository.save(user);
     }
 
