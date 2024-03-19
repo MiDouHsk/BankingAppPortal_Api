@@ -32,4 +32,12 @@ public class TransactionServiceImpl implements TransactionService {
 
         return transactionDtos;
     }
+
+    @Override
+    public List<TransactionDto> getAllTransactions() {
+        List<Transaction> transactions = transactionRepository.findAll();
+        return transactions.stream()
+                .map(transactionMapper::toTransactionDto)
+                .collect(Collectors.toList());
+    }
 }

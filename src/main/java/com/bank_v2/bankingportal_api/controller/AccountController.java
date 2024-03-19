@@ -1,5 +1,6 @@
 package com.bank_v2.bankingportal_api.controller;
 
+import com.bank_v2.bankingportal_api.config.ModelMapperConfig;
 import com.bank_v2.bankingportal_api.dto.AccountDto;
 import com.bank_v2.bankingportal_api.dto.AmountRequest;
 import com.bank_v2.bankingportal_api.dto.FundTransferRequest;
@@ -9,8 +10,14 @@ import com.bank_v2.bankingportal_api.entity.User;
 import com.bank_v2.bankingportal_api.exception.InsufficientBalanceException;
 import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.exception.UnauthorizedException;
+import com.bank_v2.bankingportal_api.mapper.AccountMapper;
+import com.bank_v2.bankingportal_api.repository.AccountRepository;
+import com.bank_v2.bankingportal_api.repository.UserRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
 import com.bank_v2.bankingportal_api.service.TransactionService;
+import com.bank_v2.bankingportal_api.service.UserService;
+import com.bank_v2.bankingportal_api.util.LoggedinUser;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.lang.*;
+import java.util.Objects;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
@@ -29,10 +38,7 @@ public class AccountController {
     private final AccountService accountService;
 
     private TransactionService transactionService;
-    @Autowired
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
+
     @PostMapping("/deposit")
     public ResponseEntity<?> cashDeposit(@RequestBody AmountRequest amountRequest) throws ClassNotFoundException {
         if (amountRequest.getAmount() <= 0) {
@@ -103,11 +109,16 @@ public class AccountController {
             return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/transaction")
-    public ResponseEntity<List<TransactionDto>> getAllTransactionsByAccountNumber() {
-        AccountDto accountDto = new AccountDto();
-        List<TransactionDto> transactionDtos = transactionService
-                .getAllTransactionsByAccountNumber(accountDto.getAccountNumber());
+    @GetMapping("/{accountNumber}/transaction")
+    public ResponseEntity<List<TransactionDto>> getAllTransactionsByAccountNumber(@RequestParam String accountNumber) {
+        List<TransactionDto> transactionDtos = transactionService.getAllTransactionsByAccountNumber(accountNumber);
         return ResponseEntity.ok(transactionDtos);
     }
+
+    @GetMapping("/transactions")
+    public ResponseEntity<List<TransactionDto>> getAllTransactions() {
+        List<TransactionDto> transactionDtos = transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactionDtos);
+    }
+
 }

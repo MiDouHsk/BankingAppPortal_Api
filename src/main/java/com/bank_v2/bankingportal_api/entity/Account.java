@@ -2,13 +2,18 @@ package com.bank_v2.bankingportal_api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Objects;
 import java.util.Random;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+//@ToString
+@Data
 public class Account {
 
     @Id

@@ -39,6 +39,7 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(account);
     }
 
+
     private String generateUniqueAccountNumber() {
         String accountNumber;
         do {
@@ -49,20 +50,6 @@ public class AccountServiceImpl implements AccountService {
         return accountNumber;
     }
 
-    @Override
-    public boolean isPinCreated(String accountNumber) {
-        return false;
-    }
-
-    @Override
-    public void createPIN(String accountNumber, String password, String pin) {
-
-    }
-
-    @Override
-    public void updatePIN(String accountNumber, String oldPIN, String password, String newPIN) {
-
-    }
 
     @Override
     public void cashDeposit(String accountNumber, String pin, double amount) throws ClassNotFoundException {
@@ -105,9 +92,9 @@ public class AccountServiceImpl implements AccountService {
             throw new NotFoundException("Target account not found");
         }
 
-        if (!passwordEncoder.matches(pin, sourceAccount.getPin())) {
-            throw new UnauthorizedException("Invalid PIN");
-        }
+//        if (!passwordEncoder.matches(pin, sourceAccount.getPin())) {
+//            throw new UnauthorizedException("Invalid PIN");
+//        }
 
         double sourceBalance = sourceAccount.getBalance();
         if (sourceBalance < amount) {
@@ -129,4 +116,6 @@ public class AccountServiceImpl implements AccountService {
         transaction.setTargetAccount(targetAccount);
         transactionRepository.save(transaction);
     }
+
+
 }
