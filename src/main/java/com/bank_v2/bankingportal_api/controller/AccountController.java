@@ -120,5 +120,4 @@ public class AccountController {
         List<TransactionDto> transactionDtos = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactionDtos);
     }
-
 }

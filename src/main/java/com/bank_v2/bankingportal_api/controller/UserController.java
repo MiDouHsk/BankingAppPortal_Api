@@ -1,31 +1,12 @@
 package com.bank_v2.bankingportal_api.controller;
 
-import com.bank_v2.bankingportal_api.dto.LoginRequest;
-import com.bank_v2.bankingportal_api.dto.RoleDto;
 import com.bank_v2.bankingportal_api.dto.UserDto;
-import com.bank_v2.bankingportal_api.entity.Role;
-import com.bank_v2.bankingportal_api.entity.RoleType;
 import com.bank_v2.bankingportal_api.entity.User;
-import com.bank_v2.bankingportal_api.mapper.RoleMapper;
-import com.bank_v2.bankingportal_api.repository.UserRepository;
-import com.bank_v2.bankingportal_api.service.RoleService;
 import com.bank_v2.bankingportal_api.service.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -33,7 +14,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private RoleMapper roleMapper;
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {

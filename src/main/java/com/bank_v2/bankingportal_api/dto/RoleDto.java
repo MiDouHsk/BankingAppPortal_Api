@@ -1,6 +1,7 @@
 package com.bank_v2.bankingportal_api.dto;
 
-import com.bank_v2.bankingportal_api.entity.RoleType;
+
+import com.bank_v2.bankingportal_api.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 

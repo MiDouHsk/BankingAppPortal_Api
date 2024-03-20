@@ -1,16 +1,18 @@
-package com.bank_v2.bankingportal_api.entity;
-
-import com.bank_v2.bankingportal_api.dto.RoleDto;
-import lombok.*;
-
-
-@AllArgsConstructor
-
-public enum RoleType {
-    ROLE_ADMIN,
-    ROLE_USER;
-
-
-}
-
-
+//package com.bank_v2.bankingportal_api.entity;
+//
+//public enum RoleType {
+//    ROLE_ADMIN(1),
+//    ROLE_USER(2);
+//
+//    private final int id;
+//
+//    RoleType(int id) {
+//        this.id = id;
+//    }
+//
+//    public int getId() {
+//        return id;
+//    }
+//}
+//
+//

@@ -5,9 +5,11 @@ import com.bank_v2.bankingportal_api.dto.UserDto;
 import com.bank_v2.bankingportal_api.entity.*;
 import com.bank_v2.bankingportal_api.exception.UserValidation;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
+import com.bank_v2.bankingportal_api.repository.RoleRepository;
 import com.bank_v2.bankingportal_api.repository.UserRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
 import com.bank_v2.bankingportal_api.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,15 +18,14 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final AccountRepository accountRepository;
-    private Role role;
-    private RoleType roleType;
+    private RoleRepository roleRepository;
+
 
     @Override
     public User registerUser(UserDto dto) {
@@ -32,8 +33,10 @@ public class UserServiceImpl implements UserService {
             User user = modelMapper.map(dto, User.class);
             user.getAccount().setAccountNumber(generateUniqueAccountNumber());
             user.getAccount().setUser(user);
-            Role role = user.getRole();
-            role.setRoleType(RoleType.ROLE_USER);
+
+            Role userRole = roleRepository.findByRoleName(Role.RoleType.ROLE_USER);
+            user.setRole(userRole);
+
             return userRepository.save(user);
         } catch (Exception e) {
             e.printStackTrace();
