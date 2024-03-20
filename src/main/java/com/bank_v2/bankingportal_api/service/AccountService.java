@@ -8,5 +8,6 @@ public interface AccountService {
     public void cashDeposit(String accountNumber, String pin, double amount) throws ClassNotFoundException;
     public void cashWithdrawal(String accountNumber, String pin, double amount) throws ClassNotFoundException;
     public void fundTransfer(String sourceAccountNumber, String targetAccountNumber, String pin, double amount);
+    void deleteAccount(Long accountId);
 
 }

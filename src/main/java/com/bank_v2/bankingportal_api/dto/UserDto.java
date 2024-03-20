@@ -1,10 +1,10 @@
 package com.bank_v2.bankingportal_api.dto;
 
-import com.bank_v2.bankingportal_api.entity.Role;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +21,7 @@ public class UserDto {
     private String account_type;
     private AccountDto account;
     private RoleDto roleDto;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

@@ -120,4 +120,18 @@ public class AccountController {
         List<TransactionDto> transactionDtos = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactionDtos);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAccount(@RequestParam Long accountId) {
+        try {
+            accountService.deleteAccount(accountId);
+            return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

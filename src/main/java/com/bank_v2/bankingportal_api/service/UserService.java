@@ -11,4 +11,7 @@ public interface UserService {
     User getUserByAccountNumber(Long id, String account_no);
     public void savedUser(User user);
     User updateUser(Long id, UserDto user);
+    boolean login(String account, String password);
+    void deleteUser(Long id);
+
 }

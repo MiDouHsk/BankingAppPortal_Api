@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 @Entity
 @Data
@@ -17,10 +21,6 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name")
     private RoleType roleName;
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private RoleType roleType;
 
     public enum RoleType {
         ROLE_ADMIN(1),

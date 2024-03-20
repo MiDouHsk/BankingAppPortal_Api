@@ -1,13 +1,11 @@
 package com.bank_v2.bankingportal_api.service.serviceImpl;
 
-import com.bank_v2.bankingportal_api.entity.Account;
-import com.bank_v2.bankingportal_api.entity.Transaction;
-import com.bank_v2.bankingportal_api.entity.TransactionType;
-import com.bank_v2.bankingportal_api.entity.User;
+import com.bank_v2.bankingportal_api.entity.*;
 import com.bank_v2.bankingportal_api.exception.InsufficientBalanceException;
 import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.exception.UnauthorizedException;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
+import com.bank_v2.bankingportal_api.repository.DeletedAccountRepository;
 import com.bank_v2.bankingportal_api.repository.TransactionRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,6 +21,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private PasswordEncoder passwordEncoder;
+
+    private DeletedAccountRepository deletedAccountRepository;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -92,10 +93,6 @@ public class AccountServiceImpl implements AccountService {
             throw new NotFoundException("Target account not found");
         }
 
-//        if (!passwordEncoder.matches(pin, sourceAccount.getPin())) {
-//            throw new UnauthorizedException("Invalid PIN");
-//        }
-
         double sourceBalance = sourceAccount.getBalance();
         if (sourceBalance < amount) {
             throw new InsufficientBalanceException("Insufficient balance");
@@ -115,5 +112,26 @@ public class AccountServiceImpl implements AccountService {
         transaction.setSourceAccount(sourceAccount);
         transaction.setTargetAccount(targetAccount);
         transactionRepository.save(transaction);
+    }
+
+    @Override
+    public void deleteAccount(Long accountId) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (!optionalAccount.isPresent()) {
+            throw new NotFoundException("Account not found");
+        }
+        Account accountToDelete = optionalAccount.get();
+
+        if (accountToDelete.getBalance() > 0) {
+            throw new IllegalStateException("Cannot delete account with positive balance");
+        }
+
+        DeleteAccount deletedAccount = new DeleteAccount();
+        deletedAccount.setAccountNumber(accountToDelete.getAccountNumber());
+        deletedAccount.setName(accountToDelete.getAccountNumber());
+
+        deletedAccountRepository.save(deletedAccount);
+
+        accountRepository.delete(accountToDelete);
     }
 }

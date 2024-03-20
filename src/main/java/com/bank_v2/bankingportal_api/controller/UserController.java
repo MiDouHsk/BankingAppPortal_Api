@@ -1,5 +1,6 @@
 package com.bank_v2.bankingportal_api.controller;
 
+import com.bank_v2.bankingportal_api.dto.LoginRequest;
 import com.bank_v2.bankingportal_api.dto.UserDto;
 import com.bank_v2.bankingportal_api.entity.User;
 import com.bank_v2.bankingportal_api.service.UserService;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.bank_v2.bankingportal_api.service.AuthenticationService;
 
 @RestController
 @AllArgsConstructor
@@ -37,5 +39,17 @@ public class UserController {
         User userAccount = userService.updateUser(id, user);
         return ResponseEntity.ok(userAccount);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticate(@RequestBody LoginRequest loginRequest) {
+        boolean authenticated = userService.login(loginRequest.getAccountNumber(), loginRequest.getPassword());
+        if (authenticated) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+
 
 }
