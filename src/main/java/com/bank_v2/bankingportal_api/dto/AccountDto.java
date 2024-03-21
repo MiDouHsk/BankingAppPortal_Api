@@ -1,10 +1,12 @@
 package com.bank_v2.bankingportal_api.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-@Data
+@Setter
+@Getter
 public class AccountDto {
     private String accountNumber;
     private double balance;
@@ -13,11 +15,11 @@ public class AccountDto {
     private String IFSCCode;
     private Date transactionDate;
 
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
-
-    public void setTransactionDate(Date transactionDate) {
-        this.transactionDate = transactionDate;
-    }
+//    public Date getTransactionDate() {
+//        return transactionDate;
+//    }
+//
+//    public void setTransactionDate(Date transactionDate) {
+//        this.transactionDate = transactionDate;
+//    }
 }

@@ -5,6 +5,7 @@ import com.bank_v2.bankingportal_api.entity.Transaction;
 import com.bank_v2.bankingportal_api.mapper.TransactionMapper;
 import com.bank_v2.bankingportal_api.repository.TransactionRepository;
 import com.bank_v2.bankingportal_api.service.TransactionService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .collect(Collectors.toList());
         return transactionDtos;
     }
-
     @Override
     public List<TransactionDto> getAllTransactions() {
         List<Transaction> transactions = transactionRepository.findAll();

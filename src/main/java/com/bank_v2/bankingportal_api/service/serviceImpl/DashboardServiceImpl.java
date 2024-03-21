@@ -32,8 +32,6 @@ public class DashboardServiceImpl implements DashboardService {
         userDto.setAccountNumber(user.getAccount().getAccountNumber());
         return userDto;
     }
-
-
     @Override
     public AccountDto getAccountDetails(String accountNumber) throws ClassNotFoundException {
         Account account = accountRepository.findByAccountNumber(accountNumber);
@@ -48,7 +46,6 @@ public class DashboardServiceImpl implements DashboardService {
         accountDto.setBalance(account.getBalance());
         accountDto.setBranch(account.getBranch());
         accountDto.setIFSCCode(account.getIFSC_code());
-
         return accountDto;
     }
 }

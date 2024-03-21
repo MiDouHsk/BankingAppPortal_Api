@@ -6,8 +6,10 @@ import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
 import com.bank_v2.bankingportal_api.repository.TransactionRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.bank_v2.bankingportal_api.entity.Account;
 
 import java.util.Date;
 import java.util.List;
@@ -102,14 +104,22 @@ public class AccountServiceImpl implements AccountService {
         transaction.setTargetAccount(targetAccount);
         transactionRepository.save(transaction);
     }
+    @Override
+    public void deleteAccountsByUserId(Long id) {
+        List<Account> accounts = accountRepository.deleteAccountsByUserId(id);
+        accountRepository.deleteAll(accounts);
+    }
 
     @Override
-    public void deleteAccountsByUserId(Long UserId) {
-        Account accounts = accountRepository.findByUserId(UserId);
-        if (accounts.getBalance() > 0) {
-            throw new IllegalStateException("Cannot delete account with positive balance");
-        } else {
-            accountRepository.deleteById(accounts.getId());
+    public void deleteAccountWithTransactions(Long accountId) {
+        try{
+            transactionRepository.deleteBySourceAccount_Id(accountId);
+            transactionRepository.deleteByTargetAccount_Id(accountId);
+
+            deleteAccountsByUserId(accountId);
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 }

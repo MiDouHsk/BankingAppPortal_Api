@@ -3,6 +3,7 @@ package com.bank_v2.bankingportal_api.service.serviceImpl;
 
 import com.bank_v2.bankingportal_api.dto.UserDto;
 import com.bank_v2.bankingportal_api.entity.*;
+import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.exception.UserValidation;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
 import com.bank_v2.bankingportal_api.repository.RoleRepository;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -129,9 +131,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void DeleteUser(Long UserId) {
-        userRepository.deleteById(UserId);
+    public void deleteUser(Long id) {
+        try {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        accountService.deleteAccountsByUserId(UserId);
+            userRepository.deleteAccountsById(user.getId());
+
+//            accountService.deleteAccountWithTransactions(user.getId());
+
+            userRepository.deleteUserWithById(user.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new NotFoundException("cant find User Id.");
+        }
     }
 }

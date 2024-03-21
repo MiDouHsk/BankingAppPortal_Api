@@ -9,7 +9,6 @@ import com.bank_v2.bankingportal_api.exception.UnauthorizedException;
 import com.bank_v2.bankingportal_api.service.AccountService;
 import com.bank_v2.bankingportal_api.service.TransactionService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +23,8 @@ import java.lang.*;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-    private final AccountService accountService;
-    private final TransactionService transactionService;
+    private AccountService accountService;
+    private TransactionService transactionService;
 
     @PostMapping("/deposit")
     public ResponseEntity<?> cashDeposit(@RequestBody AmountRequest amountRequest) throws ClassNotFoundException {
