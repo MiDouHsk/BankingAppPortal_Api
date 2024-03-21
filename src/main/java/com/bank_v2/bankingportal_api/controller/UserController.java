@@ -2,7 +2,9 @@ package com.bank_v2.bankingportal_api.controller;
 
 import com.bank_v2.bankingportal_api.dto.LoginRequest;
 import com.bank_v2.bankingportal_api.dto.UserDto;
+import com.bank_v2.bankingportal_api.entity.Account;
 import com.bank_v2.bankingportal_api.entity.User;
+import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,18 @@ public class UserController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @DeleteMapping("/deleted/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try{
+            userService.DeleteUser(id);
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

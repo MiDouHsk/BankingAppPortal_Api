@@ -3,33 +3,22 @@ package com.bank_v2.bankingportal_api.service.serviceImpl;
 import com.bank_v2.bankingportal_api.entity.*;
 import com.bank_v2.bankingportal_api.exception.InsufficientBalanceException;
 import com.bank_v2.bankingportal_api.exception.NotFoundException;
-import com.bank_v2.bankingportal_api.exception.UnauthorizedException;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
-import com.bank_v2.bankingportal_api.repository.DeletedAccountRepository;
 import com.bank_v2.bankingportal_api.repository.TransactionRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
+@AllArgsConstructor
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    private final AccountRepository accountRepository;
-    private PasswordEncoder passwordEncoder;
-
-    private DeletedAccountRepository deletedAccountRepository;
-
-    @Autowired
+    private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
-    @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
 
     @Override
     public Account createAccount(User user) {
@@ -115,23 +104,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAccount(Long accountId) {
-        Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (!optionalAccount.isPresent()) {
-            throw new NotFoundException("Account not found");
-        }
-        Account accountToDelete = optionalAccount.get();
-
-        if (accountToDelete.getBalance() > 0) {
+    public void deleteAccountsByUserId(Long UserId) {
+        Account accounts = accountRepository.findByUserId(UserId);
+        if (accounts.getBalance() > 0) {
             throw new IllegalStateException("Cannot delete account with positive balance");
+        } else {
+            accountRepository.deleteById(accounts.getId());
         }
-
-        DeleteAccount deletedAccount = new DeleteAccount();
-        deletedAccount.setAccountNumber(accountToDelete.getAccountNumber());
-        deletedAccount.setName(accountToDelete.getAccountNumber());
-
-        deletedAccountRepository.save(deletedAccount);
-
-        accountRepository.delete(accountToDelete);
     }
 }

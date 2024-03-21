@@ -1,43 +1,31 @@
 package com.bank_v2.bankingportal_api.controller;
 
-import com.bank_v2.bankingportal_api.config.ModelMapperConfig;
-import com.bank_v2.bankingportal_api.dto.AccountDto;
 import com.bank_v2.bankingportal_api.dto.AmountRequest;
 import com.bank_v2.bankingportal_api.dto.FundTransferRequest;
 import com.bank_v2.bankingportal_api.dto.TransactionDto;
-import com.bank_v2.bankingportal_api.entity.Account;
-import com.bank_v2.bankingportal_api.entity.User;
 import com.bank_v2.bankingportal_api.exception.InsufficientBalanceException;
 import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.exception.UnauthorizedException;
-import com.bank_v2.bankingportal_api.mapper.AccountMapper;
-import com.bank_v2.bankingportal_api.repository.AccountRepository;
-import com.bank_v2.bankingportal_api.repository.UserRepository;
 import com.bank_v2.bankingportal_api.service.AccountService;
 import com.bank_v2.bankingportal_api.service.TransactionService;
-import com.bank_v2.bankingportal_api.service.UserService;
-import com.bank_v2.bankingportal_api.util.LoggedinUser;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.lang.*;
-import java.util.Objects;
+
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-
     private final AccountService accountService;
-
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
     @PostMapping("/deposit")
     public ResponseEntity<?> cashDeposit(@RequestBody AmountRequest amountRequest) throws ClassNotFoundException {
@@ -119,19 +107,5 @@ public class AccountController {
     public ResponseEntity<List<TransactionDto>> getAllTransactions() {
         List<TransactionDto> transactionDtos = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactionDtos);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAccount(@RequestParam Long accountId) {
-        try {
-            accountService.deleteAccount(accountId);
-            return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }

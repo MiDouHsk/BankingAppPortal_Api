@@ -3,21 +3,18 @@ package com.bank_v2.bankingportal_api.service.serviceImpl;
 
 import com.bank_v2.bankingportal_api.dto.UserDto;
 import com.bank_v2.bankingportal_api.entity.*;
-import com.bank_v2.bankingportal_api.exception.NotFoundException;
 import com.bank_v2.bankingportal_api.exception.UserValidation;
 import com.bank_v2.bankingportal_api.repository.AccountRepository;
-import com.bank_v2.bankingportal_api.repository.DeletedAccountRepository;
 import com.bank_v2.bankingportal_api.repository.RoleRepository;
 import com.bank_v2.bankingportal_api.repository.UserRepository;
+import com.bank_v2.bankingportal_api.service.AccountService;
 import com.bank_v2.bankingportal_api.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final AccountRepository accountRepository;
     private RoleRepository roleRepository;
-    private DeletedAccountRepository deletedAccountRepository;
+    private AccountService accountService;
 
 
     @Override
@@ -132,7 +129,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void DeleteUser(Long UserId) {
+        userRepository.deleteById(UserId);
 
+        accountService.deleteAccountsByUserId(UserId);
     }
 }
