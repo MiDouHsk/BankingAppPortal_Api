@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByAccountNumber(String accountNumber);
+    @Transactional
     List<Account> deleteAccountsByUserId(Long id);
 }

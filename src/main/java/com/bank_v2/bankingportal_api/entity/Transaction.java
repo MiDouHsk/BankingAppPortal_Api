@@ -23,6 +23,6 @@ public class Transaction {
     private Account sourceAccount;
 
     @ManyToOne
-    @JoinColumn(name = "target_account_id")
+    @JoinColumn(name = "target_account_id", referencedColumnName = "id", nullable = false)
     private Account targetAccount;
 }

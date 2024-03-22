@@ -12,7 +12,7 @@ public interface UserService {
     public void savedUser(User user);
     User updateUser(Long id, UserDto user);
     boolean login(String account, String password);
-    void deleteUser(Long id);
 
+    void deleteUser(Long id);
 
 }

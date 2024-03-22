@@ -7,12 +7,10 @@ import lombok.*;
 import java.util.Objects;
 import java.util.Random;
 
-@Getter
-@Setter
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-//@ToString
 @Data
 public class Account {
 

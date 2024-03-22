@@ -13,8 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByAccountAccountNumber(String accountNumber);
 
     @Transactional
-//    @Modifying
-//    @Query(value = "DELETE FROM Account a WHERE a.user.id = ?1")
+    @Modifying
+    @Query(value = "DELETE FROM Account a WHERE a.user.id = ?1")
     void deleteAccountsById(Long userId);
     @Transactional
 //    @Modifying

@@ -136,14 +136,13 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
+            accountService.deleteAccountWithTransactions(user.getId());
             userRepository.deleteAccountsById(user.getId());
-
-//            accountService.deleteAccountWithTransactions(user.getId());
-
             userRepository.deleteUserWithById(user.getId());
+
         } catch (Exception e) {
             e.printStackTrace();
-            throw new NotFoundException("cant find User Id.");
+            throw new NotFoundException("Error: " + e);
         }
     }
 }

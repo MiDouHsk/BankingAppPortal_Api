@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete User</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Delete User</h1>
+<button id="deleteBtn">Delete User</button>
+
+<script>
+    $(document).ready(function() {
+        $("#deleteBtn").click(function() {
+            // Gửi yêu cầu DELETE đến endpoint /api/user/deleted/{id}
+            $.ajax({
+                url: '/api/user/deleted/{id}',
+                type: 'DELETE',
+                success: function(result) {
+                    // Xử lý khi xóa thành công (ví dụ: hiển thị thông báo)
+                    alert('User deleted successfully');
+                    // Redirect hoặc làm bất kỳ điều gì bạn muốn sau khi xóa
+                },
+                error: function(xhr, status, error) {
+                    // Xử lý khi xảy ra lỗi (ví dụ: hiển thị thông báo lỗi)
+                    alert('Error deleting user: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
